@@ -11,9 +11,6 @@ inputs:
   cert-password:
     description: 'Certificate password'
     required: true
-  cert-sha1:
-    description: 'Certificate sha1/thumbprint'
-    required: true
   cert-description:
     description: 'Add a description to the files being signed'
     required: false

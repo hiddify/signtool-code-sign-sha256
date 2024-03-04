@@ -100,21 +100,21 @@ async function createCert(): Promise<boolean> {
  * Add Certificate to the store using certutil.
  *
  */
-async function addCertToStore(): Promise<boolean> {
-	try {
-		const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`
-		core.info(`adding to store using "${command}" command`)
+// async function addCertToStore(): Promise<boolean> {
+// 	try {
+// 		const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`
+// 		core.info(`adding to store using "${command}" command`)
 
-		const {stdout} = await execAsync(command)
-		core.info(stdout)
+// 		const {stdout} = await execAsync(command)
+// 		core.info(stdout)
 
-		return true
-	} catch (error) {
-		core.error(error.stdout)
-		core.error(error.stderr)
-		return false
-	}
-}
+// 		return true
+// 	} catch (error) {
+// 		core.error(error.stdout)
+// 		core.error(error.stderr)
+// 		return false
+// 	}
+// }
 
 /**
  * Sign file using signtool.
@@ -127,7 +127,7 @@ async function trySign(file: string): Promise<boolean> {
 		await wait(i)
 		if (supportedFileExt.includes(ext)) {
 			try {
-				let command = `"${signtool}" sign /sm /t ${coreTimestampServer} /sha1 "${coreSha1}"`
+				let command = `"${signtool}" sign  /tr ${coreTimestampServer} /td SHA256 /fd SHA256 /a /f ${certPath} /p ${corePassword}   `
 				if (coreCertDesc !== '')
 					command = command.concat(` /d "${coreCertDesc}"`)
 
@@ -184,7 +184,7 @@ async function* getFiles(folder: string, recursive: boolean): any {
 async function run(): Promise<void> {
 	try {
 		validateInputs()
-		if ((await createCert()) && (await addCertToStore())) await signFiles()
+		if (await createCert()) await signFiles()
 	} catch (error) {
 		core.setFailed(`code Signing failed\nError: ${error}`)
 	}

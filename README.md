@@ -1,7 +1,7 @@
 
 
 # Signtool-Code-Signing
-[![build-test](https://github.com/GabrielAcostaEngler/signtool-code-sign/actions/workflows/test.yml/badge.svg)](https://github.com/GabrielAcostaEngler/signtool-code-sign/actions/workflows/test.yml)
+<!-- [![build-test](https://github.com/GabrielAcostaEngler/signtool-code-sign/actions/workflows/test.yml/badge.svg)](https://github.com/GabrielAcostaEngler/signtool-code-sign/actions/workflows/test.yml) -->
 
 
 This action will code sign files from the given folder, this can be done recursively if needed.  
@@ -22,9 +22,6 @@ Thanks to [Dirk Lemstra](https://github.com/dlemstra/code-sign-action) for provi
 **Required**  
 **Description** - Certificate Password. Used to add to the machine store.  
 
-### `cert-sha1`
-**Required**  
-**Description** - SHA1 hash for the certificate (Thumbprint of the certificate).  
 
 ### `cert-description`
 **Description** - Add a desciption to the files being signed.  
@@ -50,7 +47,6 @@ steps:
   with:
     certificate: '${{ secrets.CERTIFICATE }}'
     cert-password: '${{ secrets.PASSWORD }}'
-    cert-sha1: '${{ secrets.CERTHASH }}'
     cert-description: 'foo'
     folder: 'path/to/folder'
     recursive: true
