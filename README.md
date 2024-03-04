@@ -43,7 +43,7 @@ Thanks to [Dirk Lemstra](https://github.com/dlemstra/code-sign-action) for provi
 ```
 runs-on: windows-latest
 steps:
-  uses: GabrielAcostaEngler/signtool-code-sign@main
+  uses: hiddify/signtool-code-sign-sha256@main
   with:
     certificate: '${{ secrets.CERTIFICATE }}'
     cert-password: '${{ secrets.PASSWORD }}'
