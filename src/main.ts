@@ -18,7 +18,7 @@ const coreFolder = core.getInput('folder')
 const coreRecursive = core.getInput('recursive') === 'true'
 const coreBase64cert = core.getInput('certificate')
 const corePassword = core.getInput('cert-password')
-const coreSha1 = core.getInput('cert-sha1')
+// const coreSha1 = core.getInput('cert-sha1')
 const coreTimestampServer = core.getInput('timestamp-server')
 const coreCertDesc = core.getInput('cert-description')
 
@@ -60,15 +60,15 @@ function validateInputs(): boolean {
 		return false
 	}
 
-	if (coreSha1.length === 0) {
-		core.error('cert-sha1 input must have a value.')
-		return false
-	}
+	// if (coreSha1.length === 0) {
+	// 	core.error('cert-sha1 input must have a value.')
+	// 	return false
+	// }
 
-	if (corePassword.length === 0) {
-		core.error('password must have a value.')
-		return false
-	}
+	// if (corePassword.length === 0) {
+	// 	core.error('password must have a value.')
+	// 	return false
+	// }
 
 	return true
 }
@@ -100,21 +100,21 @@ async function createCert(): Promise<boolean> {
  * Add Certificate to the store using certutil.
  *
  */
-// async function addCertToStore(): Promise<boolean> {
-// 	try {
-// 		const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`
-// 		core.info(`adding to store using "${command}" command`)
+async function addCertToStore(): Promise<boolean> {
+	try {
+		const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`
+		core.info(`adding to store using "${command}" command`)
 
-// 		const {stdout} = await execAsync(command)
-// 		core.info(stdout)
+		const {stdout} = await execAsync(command)
+		core.info(stdout)
 
-// 		return true
-// 	} catch (error) {
-// 		core.error(error.stdout)
-// 		core.error(error.stderr)
-// 		return false
-// 	}
-// }
+		return true
+	} catch (error) {
+		core.error(error.stdout)
+		core.error(error.stderr)
+		return false
+	}
+}
 
 /**
  * Sign file using signtool.
@@ -184,6 +184,7 @@ async function* getFiles(folder: string, recursive: boolean): any {
 async function run(): Promise<void> {
 	try {
 		validateInputs()
+		addCertToStore()
 		if (await createCert()) await signFiles()
 	} catch (error) {
 		core.setFailed(`code Signing failed\nError: ${error}`)

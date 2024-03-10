@@ -1,4 +1,4 @@
-require('./sourcemap-register.js');/******/ (() => { // webpackBootstrap
+/******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
 /***/ 830:
@@ -78,7 +78,7 @@ const coreFolder = core.getInput('folder');
 const coreRecursive = core.getInput('recursive') === 'true';
 const coreBase64cert = core.getInput('certificate');
 const corePassword = core.getInput('cert-password');
-const coreSha1 = core.getInput('cert-sha1');
+// const coreSha1 = core.getInput('cert-sha1')
 const coreTimestampServer = core.getInput('timestamp-server');
 const coreCertDesc = core.getInput('cert-description');
 // Supported files
@@ -115,14 +115,14 @@ function validateInputs() {
         core.error('cert-password input must have a value.');
         return false;
     }
-    if (coreSha1.length === 0) {
-        core.error('cert-sha1 input must have a value.');
-        return false;
-    }
-    if (corePassword.length === 0) {
-        core.error('password must have a value.');
-        return false;
-    }
+    // if (coreSha1.length === 0) {
+    // 	core.error('cert-sha1 input must have a value.')
+    // 	return false
+    // }
+    // if (corePassword.length === 0) {
+    // 	core.error('password must have a value.')
+    // 	return false
+    // }
     return true;
 }
 /**
@@ -151,19 +151,22 @@ function createCert() {
  * Add Certificate to the store using certutil.
  *
  */
-// async function addCertToStore(): Promise<boolean> {
-// 	try {
-// 		const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`
-// 		core.info(`adding to store using "${command}" command`)
-// 		const {stdout} = await execAsync(command)
-// 		core.info(stdout)
-// 		return true
-// 	} catch (error) {
-// 		core.error(error.stdout)
-// 		core.error(error.stderr)
-// 		return false
-// 	}
-// }
+function addCertToStore() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const command = `certutil -f -p ${corePassword} -importpfx ${certPath}`;
+            core.info(`adding to store using "${command}" command`);
+            const { stdout } = yield execAsync(command);
+            core.info(stdout);
+            return true;
+        }
+        catch (error) {
+            core.error(error.stdout);
+            core.error(error.stderr);
+            return false;
+        }
+    });
+}
 /**
  * Sign file using signtool.
  *
@@ -246,6 +249,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             validateInputs();
+            addCertToStore();
             if (yield createCert())
                 yield signFiles();
         }
@@ -1956,4 +1960,3 @@ module.exports = require("util");
 /******/ 	
 /******/ })()
 ;
-//# sourceMappingURL=index.js.map
